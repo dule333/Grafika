@@ -1,0 +1,26 @@
+﻿<Window x:Class="WpfApp1.DIalogs.TextWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1.DIalogs"
+        mc:Ignorable="d"
+        Title="Polygon" Height="123" Width="236" ResizeMode="NoResize">
+    <Grid>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Size" Width="100"/>
+                <TextBox x:Name="size" MinWidth="120"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Text" Width="100"/>
+                <TextBox x:Name="text" MinWidth="120"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Text Color" Width="100"/>
+                <ComboBox x:Name="textColor" MinWidth="120"/>
+            </StackPanel>
+            <Button Content="Finish" Click="Button_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

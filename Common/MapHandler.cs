@@ -12,6 +12,7 @@ namespace Common
         public static int ArraySize = 500;
         public static EntityWrapper[,] BigArray = new EntityWrapper[ArraySize, ArraySize];
         private double maxX, maxY, minX, minY;
+        private int missedCount = 0;
         Converter converter = new Converter();
         private bool[,] visitedMatrix = new bool[ArraySize, ArraySize];
         private LineType CalculateJoin(LineType line1, LineType line2)
@@ -80,14 +81,20 @@ namespace Common
             ArrayPosition position = null;
             queue.Enqueue(startingPosition);
             visitedMatrix[firstEnd.Item1, firstEnd.Item2] = true;
+            int count = 0;
+            int maxRange = (int)Math.Sqrt((secondEnd.Item1 * secondEnd.Item1 - firstEnd.Item1 * firstEnd.Item1) + 
+                (secondEnd.Item2 * secondEnd.Item2 - firstEnd.Item2 * firstEnd.Item2));
+            maxRange = maxRange * maxRange * 10;
+
 
             while (queue.Count > 0)
             {
+                count++;
                 position = queue.Dequeue();
                 if(position.X == secondEnd.Item1 && position.Y == secondEnd.Item2)
-                {
                     return position;
-                }
+                if (count >= maxRange)
+                    return null;
                 for(int i = -2; i < 3; i++)
                 {
                     if (position.X + i / 2 < 0 || position.Y + i % 2 < 0 || position.X + i / 2 >= ArraySize || position.Y + i % 2 >= ArraySize)
@@ -105,18 +112,17 @@ namespace Common
 
         private void FillArrayLines()
         {
-            //CompareHelper helper = new CompareHelper();
-            //Converter.lineEntities.Sort(helper);
-            List<LineEntity> tempList = new List<LineEntity>(Converter.lineEntities);
+            List<LineEntity> tempList = new List<LineEntity>(Converter.lineEntities.Values);
             foreach (LineEntity item in tempList)
             {
                 PlaceLines(item);
             }
-            tempList = new List<LineEntity>(Converter.lineEntities);
+            tempList = new List<LineEntity>(Converter.lineEntities2.Values);
             foreach (LineEntity item in tempList)
             {
                 PlaceLines(item, true);
             }
+            Converter.lineEntities2.Clear();
         }
 
         private void PlaceLines(LineEntity entity, bool intersect = false)
@@ -180,7 +186,8 @@ namespace Common
                 }
                 position = position.Parent;
             }
-            Converter.lineEntities.Remove(entity);
+            if(!intersect)
+                Converter.lineEntities2.Add(missedCount++, entity);
         }
 
         private LineType CalculateLineType(Tuple<int, int> tuple1, Tuple<int, int> tuple2, Tuple<int, int> tuple3)

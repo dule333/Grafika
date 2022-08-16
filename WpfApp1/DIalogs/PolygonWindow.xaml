@@ -28,6 +28,10 @@
                 <Label Content="Text Color" Width="100"/>
                 <ComboBox x:Name="textColor" MinWidth="120"/>
             </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Opacity" Width="100"/>
+                <Slider x:Name="polygonOpacity" MinWidth="120" Minimum="0" Maximum="1" SmallChange="0.01" LargeChange="0.1"/>
+            </StackPanel>
             <Button Content="Finish" Click="Button_Click"/>
         </StackPanel>
     </Grid>

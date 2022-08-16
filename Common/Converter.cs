@@ -180,7 +180,8 @@ namespace Common
                         continue;
                     }
                     tempList.Add(l);
-                    lineEntities.Add(Math.Sqrt((second.powerEntity.X * second.powerEntity.X - first.powerEntity.X * first.powerEntity.X) * 1000 + (second.powerEntity.Y * second.powerEntity.Y - first.powerEntity.Y * first.powerEntity.Y) * 1000), l);
+                    lineEntities.Add(Math.Sqrt((second.powerEntity.X - first.powerEntity.X) * (second.powerEntity.X - first.powerEntity.X) +
+                (second.powerEntity.Y - first.powerEntity.Y) * (second.powerEntity.Y - first.powerEntity.Y)), l);
                 }
             }
             tempList.Clear();

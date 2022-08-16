@@ -12,7 +12,9 @@ namespace Common
     {
         public static List<EntityWrapper> powerEntities = new List<EntityWrapper>();
 
-        public static List<LineEntity> lineEntities = new List<LineEntity>();
+        public static SortedList<double, LineEntity> lineEntities = new SortedList<double, LineEntity>(new CompareHelper<double>());
+        public static SortedList<double, LineEntity> lineEntities2 = new SortedList<double, LineEntity>(new CompareHelper<double>());
+        private static List<LineEntity> tempList = new List<LineEntity>();
         public static void ToLatLon(double utmX, double utmY, int zoneUTM, out double latitude, out double longitude)
         {
             bool isNorthHemisphere = true;
@@ -170,12 +172,19 @@ namespace Common
                 l.SecondEnd = long.Parse(node.SelectSingleNode("SecondEnd").InnerText);
                 if (l.FirstEnd == 0 || l.SecondEnd == 0)
                     continue;
-                if (powerEntities.Find(t => t.powerEntity.Id == l.FirstEnd) != null && powerEntities.Find(t => t.powerEntity.Id == l.SecondEnd) != null)
+                EntityWrapper first = powerEntities.Find(t => t.powerEntity.Id == l.FirstEnd), second = powerEntities.Find(t => t.powerEntity.Id == l.SecondEnd);
+                if (first != null && second != null)
                 {
-                    if(lineEntities.Find(t => (t.FirstEnd == l.FirstEnd && t.SecondEnd == l.SecondEnd) || (t.FirstEnd == l.SecondEnd && t.SecondEnd == l.FirstEnd))  == null)
-                        lineEntities.Add(l);
+                    if (tempList.Find(t => (t.FirstEnd == l.FirstEnd && t.SecondEnd == l.SecondEnd) || (t.FirstEnd == l.SecondEnd && t.SecondEnd == l.FirstEnd)) != null)
+                    {
+                        continue;
+                    }
+                    tempList.Add(l);
+                    lineEntities.Add(Math.Sqrt((second.powerEntity.X - first.powerEntity.X) * (second.powerEntity.X - first.powerEntity.X) +
+                (second.powerEntity.Y - first.powerEntity.Y) * (second.powerEntity.Y - first.powerEntity.Y)), l);
                 }
             }
+            tempList.Clear();
         }
     }
 }

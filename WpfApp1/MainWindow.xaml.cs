@@ -48,11 +48,7 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
-            mapHandler.CalculateEntities();
-            DrawMap();
             canvas.LayoutTransform = scale;
-            SetRect(rectangle1);
-            SetRect(rectangle2);
             canvas.Background = new SolidColorBrush(Colors.White);
         }
 
@@ -74,9 +70,10 @@ namespace WpfApp1
         {
             Rectangle rect = new Rectangle
             {
-                Width = 5,
-                Height = 5,
-                Stroke = new SolidColorBrush(Colors.Black)
+                Width = MapHandler.ArraySize / 100,
+                Height = MapHandler.ArraySize / 100,
+                Stroke = new SolidColorBrush(Colors.Black),
+                StrokeThickness = MapHandler.ArraySize / 100 / 4.0
             };
             switch (entity.entityType)
             {
@@ -93,8 +90,8 @@ namespace WpfApp1
                     break;
             }
             rect.ToolTip = "Name:" + entity.powerEntity.Name + "\nID:" + entity.powerEntity.Id.ToString();
-            Canvas.SetLeft(rect, x * 5 - 2);
-            Canvas.SetTop(rect, (500 - y) * 5 - 2);
+            Canvas.SetLeft(rect, x * MapHandler.ArraySize / 100 - 2);
+            Canvas.SetTop(rect, (MapHandler.ArraySize - y) * MapHandler.ArraySize / 100 - 2);
             canvas.Children.Add(rect);
         }
 
@@ -130,8 +127,8 @@ namespace WpfApp1
             Rectangle rect = new Rectangle
             {
                 Name = "coord_" + i + "_" + j,
-                Width = 5,
-                Height = 5,
+                Width = MapHandler.ArraySize / 100,
+                Height = MapHandler.ArraySize / 100,
                 Stroke = null,
                 Fill = imageBrush
             };
@@ -139,8 +136,8 @@ namespace WpfApp1
             {
                 rect.ToolTip += "Name:" + item.Name + "\nID:" + item.Id.ToString() + "\n";
             }
-            Canvas.SetLeft(rect, i * 5 - 2);
-            Canvas.SetTop(rect, (500 - j) * 5 - 2);
+            Canvas.SetLeft(rect, i * MapHandler.ArraySize / 100 - 2);
+            Canvas.SetTop(rect, (MapHandler.ArraySize - j) * MapHandler.ArraySize / 100 - 2);
             rect.MouseRightButtonDown += Line_HandleRightClick;
             canvas.Children.Add(rect);
         }
@@ -171,11 +168,11 @@ namespace WpfApp1
             X2 = MapHandler.GetTuple(entityWrapper.lineEntities[count].Item2).Item1;
             Y2 = MapHandler.GetTuple(entityWrapper.lineEntities[count].Item2).Item2;
 
-            Canvas.SetLeft(rectangle1, X1 * 5 - 2);
-            Canvas.SetTop(rectangle1, (500 - Y1) * 5 - 2);
+            Canvas.SetLeft(rectangle1, X1 * MapHandler.ArraySize / 100 - 2);
+            Canvas.SetTop(rectangle1, (MapHandler.ArraySize - Y1) * MapHandler.ArraySize / 100 - 2);
             canvas.Children.Add(rectangle1);
-            Canvas.SetLeft(rectangle2, X2 * 5 - 2);
-            Canvas.SetTop(rectangle2, (500 - Y2) * 5 - 2);
+            Canvas.SetLeft(rectangle2, X2 * MapHandler.ArraySize / 100 - 2);
+            Canvas.SetTop(rectangle2, (MapHandler.ArraySize - Y2) * MapHandler.ArraySize / 100 - 2);
             canvas.Children.Add(rectangle2);
             count++;
         }
@@ -183,8 +180,8 @@ namespace WpfApp1
         private void SetRect(Rectangle rect)
         {
             rect.Opacity = 0.75;
-            rect.Width = 5;
-            rect.Height = 5;
+            rect.Width = MapHandler.ArraySize / 100;
+            rect.Height = MapHandler.ArraySize / 100;
             rect.Stroke = null;
             rect.Fill = new SolidColorBrush(Colors.White);
         }
@@ -397,6 +394,47 @@ namespace WpfApp1
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             drawEllipse = true;
+        }
+
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            RenderTargetBitmap rtb = new RenderTargetBitmap((int)canvas.RenderSize.Width,
+                (int)canvas.RenderSize.Height, 96d, 96d, PixelFormats.Default);
+            rtb.Render(canvas);
+
+            BitmapEncoder pngEncoder = new PngBitmapEncoder();
+            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+
+            using (var fs = System.IO.File.OpenWrite("Canvas.png"))
+            {
+                pngEncoder.Save(fs);
+            }
+        }
+
+        private void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+            canvas.Children.Clear();
+            canvas.Width = canvas.Height = Int32.Parse(canvasSize.Text) * 5;
+            MapHandler.ArraySize = Int32.Parse(canvasSize.Text);
+            SetRect(rectangle1);
+            SetRect(rectangle2);
+            DateTime dateTime = DateTime.Now;
+            mapHandler.CalculateEntities();
+            DrawMap();
+            timeNeeded.Content = (DateTime.Now - dateTime).TotalSeconds;
+        }
+
+        private void Button_Click_8(object sender, RoutedEventArgs e)
+        {
+            canvas.Children.Clear();
+            canvas.Width = canvas.Height = Int32.Parse(canvasSize.Text) * 5;
+            MapHandler.ArraySize = Int32.Parse(canvasSize.Text);
+            SetRect(rectangle1);
+            SetRect(rectangle2);
+            DateTime dateTime = DateTime.Now;
+            mapHandler.CalculateEntities();
+            DrawMap();
+            timeNeeded.Content = (DateTime.Now - dateTime).TotalSeconds;
         }
 
         private void UIElement_Modify(object sender, EventArgs e)

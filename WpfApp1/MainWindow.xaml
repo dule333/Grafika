@@ -13,16 +13,23 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <DockPanel LastChildFill="False" Grid.Row="0">
-                <Slider Maximum="10" Minimum="0" SmallChange="0.5" Value="1" TickPlacement="BottomRight" Width="300" ValueChanged="Slider_ValueChanged"/>
+                <Slider Maximum="10" Minimum="0" SmallChange="0.5" Value="1" TickPlacement="BottomRight" Width="100" ValueChanged="Slider_ValueChanged"/>
                 <Button Content="Draw Ellipse" Click="Button_Click" />
                 <Button Content="Draw Polygon" Click="Button_Click_1" />
                 <Button Content="Add Text" Click="Button_Click_2" />
                 <Button Content="Undo"  Click="Button_Click_3" />
-                <Button Content="Redo" Click="Button_Click_4"  />
-                <Button Content="Clear" Click="Button_Click_5" />
-            </DockPanel>
+            <Button Content="Redo" Click="Button_Click_4"  />
+            <Button Content="Clear" Click="Button_Click_5" />
+            <Button Content="Save" Click="Button_Click_6" />
+            <Label VerticalAlignment="Center" Content="Canvas Size:"/>
+            <TextBox x:Name="canvasSize" MinWidth="120"/>
+            <Button Content="Draw" Click="Button_Click_7" />
+            <Button Content="Draw w/o Node" Click="Button_Click_8" />
+            <Label VerticalAlignment="Center" Content="Time to draw:"/>
+            <Label VerticalAlignment="Center" x:Name="timeNeeded"/>
+        </DockPanel>
 
-        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" Grid.Row="1">
+        <ScrollViewer x:Name="scroll" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" Grid.Row="1">
             <Canvas x:Name="canvas" Width="2500" Height="2500" MouseRightButtonDown="Canvas_MouseRightButtonDown" MouseLeftButtonDown="Canvas_MouseLeftButtonDown"/>
         </ScrollViewer>
     </Grid>

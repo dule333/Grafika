@@ -56,7 +56,9 @@ namespace WpfApp1.DIalogs
             }
             NewThickness = Convert.ToDouble(thickness.Text);
             splitted = fill.SelectedItem.ToString().Split(' ');
-            NewFill = (SolidColorBrush)new BrushConverter().ConvertFromString(splitted[1]);
+            Color color = ((SolidColorBrush)new BrushConverter().ConvertFromString(splitted[1])).Color;
+            color.A = Byte.Parse(((int)(polygonOpacity.Value * 255)).ToString());
+            NewFill = new SolidColorBrush(color);
             splitted = stroke.SelectedItem.ToString().Split(' ');
             NewStroke = (SolidColorBrush)new BrushConverter().ConvertFromString(splitted[1]);
             this.DialogResult = true;

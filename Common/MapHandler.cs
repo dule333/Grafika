@@ -40,9 +40,9 @@ namespace Common
         {
             Array.Copy(primeMatrix, visitedMatrix, primeMatrix.Length);
         }
-        private void FillArrayEntities()
+        private void FillArrayEntities(bool noNodes = false)
         {
-            converter.Convert();
+            converter.Convert(noNodes);
             converter.SetBounds(out maxX, out maxY, out minX, out minY);
 
             foreach (var item in Converter.powerEntities)
@@ -76,10 +76,10 @@ namespace Common
             }
         }
 
-        public void CalculateEntities()
+        public void CalculateEntities(bool noNodes)
         {
             BigArray = new EntityWrapper[ArraySize, ArraySize];
-            FillArrayEntities();
+            FillArrayEntities(noNodes);
             primeMatrix = new bool[ArraySize, ArraySize];
             FirstInitMatrix();
             FillArrayLines();

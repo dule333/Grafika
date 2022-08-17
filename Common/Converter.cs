@@ -55,16 +55,16 @@ namespace Common
             longitude = ((delt * (180.0 / Math.PI)) + s) + diflon;
             latitude = ((lat + (1 + e2cuadrada * Math.Pow(Math.Cos(lat), 2) - (3.0 / 2.0) * e2cuadrada * Math.Sin(lat) * Math.Cos(lat) * (tao - lat)) * (tao - lat)) * (180.0 / Math.PI)) + diflat;
         }
-        public void Convert()
+        public void Convert(bool noNodes = false)
         {
             powerEntities.Clear();
             lineEntities.Clear();
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load("Geographic.xml");
+            xmlDoc.Load("../../Geographic.xml");
 
             MapSubstations(xmlDoc);
             MapSwitches(xmlDoc);
-            MapNodes(xmlDoc);
+            MapNodes(xmlDoc, noNodes);
             MapLines(xmlDoc);    
             
         }
@@ -105,8 +105,10 @@ namespace Common
 
             }
         }
-        private void MapNodes(XmlDocument xmlDoc)
+        private void MapNodes(XmlDocument xmlDoc, bool noNodes = false)
         {
+            if (noNodes)
+                return;
             XmlNodeList nodeList;
             EntityWrapper entity;
             double noviX, noviY;

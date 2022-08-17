@@ -1,9 +1,5 @@
 ﻿using Common;
 using Common.Model;
-using GMap.NET;
-using GMap.NET.MapProviders;
-using GMap.NET.WindowsForms;
-using GMap.NET.WindowsForms.Markers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -405,36 +401,33 @@ namespace WpfApp1
             BitmapEncoder pngEncoder = new PngBitmapEncoder();
             pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
 
-            using (var fs = System.IO.File.OpenWrite("Canvas.png"))
+            using (var fs = System.IO.File.OpenWrite(DateTime.Now.ToString().Replace("/","_").Replace(":","_") + ".png"))
             {
                 pngEncoder.Save(fs);
             }
         }
 
-        private void Button_Click_7(object sender, RoutedEventArgs e)
+        private void DrawMapCall(bool noNodes = false)
         {
             canvas.Children.Clear();
-            canvas.Width = canvas.Height = Int32.Parse(canvasSize.Text) * 5;
+            canvas.Width = canvas.Height = Int32.Parse(canvasSize.Text) * (Int32.Parse(canvasSize.Text) / 100.0);
             MapHandler.ArraySize = Int32.Parse(canvasSize.Text);
             SetRect(rectangle1);
             SetRect(rectangle2);
             DateTime dateTime = DateTime.Now;
-            mapHandler.CalculateEntities();
+            mapHandler.CalculateEntities(noNodes);
             DrawMap();
             timeNeeded.Content = (DateTime.Now - dateTime).TotalSeconds;
         }
 
+        private void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+            DrawMapCall();
+        }
+
         private void Button_Click_8(object sender, RoutedEventArgs e)
         {
-            canvas.Children.Clear();
-            canvas.Width = canvas.Height = Int32.Parse(canvasSize.Text) * 5;
-            MapHandler.ArraySize = Int32.Parse(canvasSize.Text);
-            SetRect(rectangle1);
-            SetRect(rectangle2);
-            DateTime dateTime = DateTime.Now;
-            mapHandler.CalculateEntities();
-            DrawMap();
-            timeNeeded.Content = (DateTime.Now - dateTime).TotalSeconds;
+            DrawMapCall(true);
         }
 
         private void UIElement_Modify(object sender, EventArgs e)
